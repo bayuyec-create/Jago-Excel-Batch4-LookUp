@@ -102,7 +102,7 @@
                         <code class="break-words">=VLOOKUP(<span class="formula-part">nilai_dicari</span>; <span class="formula-part">tabel_data</span>; <span class="formula-part">kolom_ke_berapa</span>; <span class="formula-part">FALSE</span>)</code>
                     </p>
                     <ul class="text-sm space-y-2">
-                        <li><span class="formula-part">nilai_dicari</span>: "Kata kunci" yang mau kamu cari (misal: "Mangga").</li>
+                        <li><span class="formula-part">nilai_dicari</span>: "Kata kunci" yang mau kamu cari (misal: "P005").</li>
                         <li><span class="formula-part">tabel_data</span>: Area tabel tempat datamu berada. Kolom <span class="font-bold">nilai_dicari</span> harus ada di paling kiri area ini.</li>
                         <li><span class="formula-part">kolom_ke_berapa</span>: Kamu mau ambil data dari kolom ke berapa (dihitung dari kiri, kolom pertama = 1, kedua = 2, dst).</li>
                         <li><span class="formula-part">FALSE</span>: Perintah agar Excel mencari yang sama persis. Hampir selalu pakai ini.</li>
@@ -112,12 +112,12 @@
                     <div class="lg:col-span-2">
                         <div class="bg-gray-50 border-2 border-dashed border-gray-300 rounded-lg p-4 space-y-4">
                             <div>
-                                <label for="vlookup-search-value" class="font-semibold block mb-1">1. Cari Nilai Apa?</label>
-                                <input type="text" id="vlookup-search-value" placeholder="Ketik: Mangga" class="interactive-input">
+                                <label for="vlookup-search-value" class="font-semibold block mb-1">1. Cari ID Produk:</label>
+                                <input type="text" id="vlookup-search-value" placeholder="Ketik: P005" class="interactive-input">
                             </div>
                             <div>
                                 <label for="vlookup-index-num" class="font-semibold block mb-1">2. Ambil Data dari Kolom ke-?</label>
-                                <input type="number" id="vlookup-index-num" value="2" min="2" max="3" class="interactive-input">
+                                <input type="number" id="vlookup-index-num" value="2" min="2" max="4" class="interactive-input">
                             </div>
                             <div>
                                 <p class="font-semibold">Rumus (Bisa Diedit):</p>
@@ -130,7 +130,7 @@
                         </div>
                     </div>
                     <div class="lg:col-span-3 overflow-x-auto">
-                        <p class="font-semibold mb-2 text-center">Tabel Data Vertikal</p>
+                        <p class="font-semibold mb-2 text-center">Tabel Inventaris Barang</p>
                         <div id="vlookup-worksheet" class="mx-auto"></div>
                     </div>
                 </div>
@@ -146,7 +146,7 @@
                         <code class="break-words">=HLOOKUP(<span class="formula-part">nilai_dicari</span>; <span class="formula-part">tabel_data</span>; <span class="formula-part">baris_ke_berapa</span>; <span class="formula-part">FALSE</span>)</code>
                     </p>
                     <ul class="text-sm space-y-2">
-                        <li><span class="formula-part">nilai_dicari</span>: "Kata kunci" yang mau kamu cari (misal: "Jeruk").</li>
+                        <li><span class="formula-part">nilai_dicari</span>: "Kata kunci" yang mau kamu cari (misal: "P007").</li>
                         <li><span class="formula-part">tabel_data</span>: Area tabel tempat datamu berada. Baris <span class="font-bold">nilai_dicari</span> harus ada di paling atas area ini.</li>
                         <li><span class="formula-part">baris_ke_berapa</span>: Kamu mau ambil data dari baris ke berapa (dihitung dari atas, baris pertama = 1, kedua = 2, dst).</li>
                         <li><span class="formula-part">FALSE</span>: Perintah agar Excel mencari yang sama persis.</li>
@@ -156,12 +156,12 @@
                     <div class="lg:col-span-2">
                          <div class="bg-gray-50 border-2 border-dashed border-gray-300 rounded-lg p-4 space-y-4">
                             <div>
-                                <label for="hlookup-search-value" class="font-semibold block mb-1">1. Cari Nilai Apa?</label>
-                                <input type="text" id="hlookup-search-value" placeholder="Ketik: Jeruk" class="interactive-input">
+                                <label for="hlookup-search-value" class="font-semibold block mb-1">1. Cari ID Produk:</label>
+                                <input type="text" id="hlookup-search-value" placeholder="Ketik: P007" class="interactive-input">
                             </div>
                             <div>
                                 <label for="hlookup-index-num" class="font-semibold block mb-1">2. Ambil Data dari Baris ke-?</label>
-                                <input type="number" id="hlookup-index-num" value="2" min="2" max="3" class="interactive-input">
+                                <input type="number" id="hlookup-index-num" value="2" min="2" max="4" class="interactive-input">
                             </div>
                             <div>
                                 <p class="font-semibold">Rumus (Bisa Diedit):</p>
@@ -174,7 +174,7 @@
                         </div>
                     </div>
                     <div class="lg:col-span-3 overflow-x-auto">
-                        <p class="font-semibold mb-2 text-center">Tabel Data Horizontal</p>
+                        <p class="font-semibold mb-2 text-center">Tabel Inventaris Barang</p>
                         <div id="hlookup-worksheet" class="mx-auto"></div>
                     </div>
                 </div>
@@ -190,7 +190,7 @@
                         <code class="break-words">=XLOOKUP(<span class="formula-part">nilai_dicari</span>; <span class="formula-part">kolom_pencarian</span>; <span class="formula-part">kolom_hasil</span>)</code>
                     </p>
                     <ul class="text-sm space-y-2">
-                        <li><span class="formula-part">nilai_dicari</span>: "Kata kunci" yang mau kamu cari (misal: "Anggur").</li>
+                        <li><span class="formula-part">nilai_dicari</span>: "Kata kunci" yang mau kamu cari (misal: "P010").</li>
                         <li><span class="formula-part">kolom_pencarian</span>: Cukup blok <span class="font-bold">satu kolom</span> tempat kamu mencari. Tidak harus di paling kiri!</li>
                         <li><span class="formula-part">kolom_hasil</span>: Cukup blok <span class="font-bold">satu kolom</span> tempat data yang mau kamu ambil berada.</li>
                     </ul>
@@ -199,14 +199,15 @@
                     <div class="lg:col-span-2">
                          <div class="bg-gray-50 border-2 border-dashed border-gray-300 rounded-lg p-4 space-y-4">
                             <div>
-                                <label for="xlookup-search-value" class="font-semibold block mb-1">1. Cari Nilai Apa?</label>
-                                <input type="text" id="xlookup-search-value" placeholder="Ketik: Anggur" class="interactive-input">
+                                <label for="xlookup-search-value" class="font-semibold block mb-1">1. Cari ID Produk:</label>
+                                <input type="text" id="xlookup-search-value" placeholder="Ketik: P010" class="interactive-input">
                             </div>
                             <div>
                                 <label for="xlookup-index-num" class="font-semibold block mb-1">2. Ambil Data dari Kolom?</label>
                                 <select id="xlookup-index-num" class="interactive-input w-full">
-                                    <option value="2">Harga/kg</option>
-                                    <option value="3">Stok (kg)</option>
+                                    <option value="2">Nama Barang</option>
+                                    <option value="3">Kategori</option>
+                                    <option value="4">Harga</option>
                                 </select>
                             </div>
                             <div>
@@ -220,7 +221,7 @@
                         </div>
                     </div>
                     <div class="lg:col-span-3 overflow-x-auto">
-                        <p class="font-semibold mb-2 text-center">Tabel Data Vertikal</p>
+                        <p class="font-semibold mb-2 text-center">Tabel Inventaris Barang</p>
                         <div id="xlookup-worksheet" class="mx-auto"></div>
                     </div>
                 </div>
@@ -274,28 +275,35 @@
 
     <script>
         const dataVertical = {
-            headers: ['', 'A', 'B', 'C'],
+            headers: ['', 'A', 'B', 'C', 'D'],
             rows: [
-                ['1', 'Nama Buah', 'Harga/kg', 'Stok (kg)'],
-                ['2', 'Apel', 25000, 150],
-                ['3', 'Jeruk', 18000, 200],
-                ['4', 'Mangga', 22000, 120],
-                ['5', 'Anggur', 45000, 80]
+                ['1', 'ID Produk', 'Nama Barang', 'Kategori', 'Harga'],
+                ['2', 'P001', 'Laptop Pro 15', 'Komputer', 18500000],
+                ['3', 'P002', 'Mouse Optik G5', 'Aksesoris', 350000],
+                ['4', 'P003', 'Keyboard Mekanikal', 'Aksesoris', 850000],
+                ['5', 'P004', 'Monitor LED 24"', 'Monitor', 2500000],
+                ['6', 'P005', 'Webcam HD 1080p', 'Aksesoris', 650000],
+                ['7', 'P006', 'Printer All-in-One', 'Printer', 1750000],
+                ['8', 'P007', 'Hard Disk Eksternal 1TB', 'Penyimpanan', 950000],
+                ['9', 'P008', 'Headset Gaming X', 'Audio', 1250000],
+                ['10', 'P009', 'SSD NVMe 512GB', 'Penyimpanan', 1100000],
+                ['11', 'P010', 'Speaker Bluetooth', 'Audio', 550000]
             ]
         };
 
         const dataHorizontal = {
-            headers: ['', 'A', 'B', 'C', 'D', 'E'],
+            headers: ['', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K'],
             rows: [
-                ['1', 'Nama Buah', 'Apel', 'Jeruk', 'Mangga', 'Anggur'],
-                ['2', 'Harga/kg', 25000, 18000, 22000, 45000],
-                ['3', 'Stok (kg)', 150, 200, 120, 80]
+                ['1', 'ID Produk', 'P001', 'P002', 'P003', 'P004', 'P005', 'P006', 'P007', 'P008', 'P009', 'P010'],
+                ['2', 'Nama Barang', 'Laptop Pro 15', 'Mouse Optik G5', 'Keyboard Mekanikal', 'Monitor LED 24"', 'Webcam HD 1080p', 'Printer All-in-One', 'Hard Disk Eksternal 1TB', 'Headset Gaming X', 'SSD NVMe 512GB', 'Speaker Bluetooth'],
+                ['3', 'Kategori', 'Komputer', 'Aksesoris', 'Aksesoris', 'Monitor', 'Aksesoris', 'Printer', 'Penyimpanan', 'Audio', 'Penyimpanan', 'Audio'],
+                ['4', 'Harga', 18500000, 350000, 850000, 2500000, 650000, 1750000, 950000, 1250000, 1100000, 550000]
             ]
         };
 
         function createWorksheet(containerId, data) {
             const container = document.getElementById(containerId);
-            let html = `<div class="excel-grid" style="grid-template-columns: 30px repeat(${data.headers.length - 1}, minmax(100px, 1fr));">`;
+            let html = `<div class="excel-grid" style="grid-template-columns: 40px repeat(${data.headers.length - 1}, minmax(120px, 1fr));">`;
             
             data.headers.forEach(header => {
                 html += `<div class="excel-cell excel-header" data-col-name="${header}">${header}</div>`;
@@ -303,9 +311,13 @@
 
             data.rows.forEach((row, rowIndex) => {
                 row.forEach((cell, cellIndex) => {
-                    const isHeader = cellIndex === 0 || rowIndex === 0;
+                    const isHeader = cellIndex === 0 || (containerId.includes('hlookup') && rowIndex === 0);
                     const cellId = `${containerId}-r${rowIndex}c${cellIndex}`;
-                    html += `<div class="excel-cell ${isHeader ? 'excel-header' : ''}" id="${cellId}">${cell}</div>`;
+                    let content = cell;
+                    if (typeof cell === 'number' && cellIndex > 0) {
+                        content = 'Rp ' + cell.toLocaleString('id-ID');
+                    }
+                    html += `<div class="excel-cell ${isHeader ? 'excel-header' : ''}" id="${cellId}">${content}</div>`;
                 });
             });
 
@@ -325,7 +337,7 @@
         function updateVlookupFormula() {
             const searchValue = vlookupSearchInput.value.trim();
             const indexNum = parseInt(vlookupIndexInput.value);
-            const tableRange = 'A2:C5';
+            const tableRange = 'A2:D11';
             if (searchValue) {
                 vlookupFormulaInput.value = `=VLOOKUP("${searchValue}"; ${tableRange}; ${indexNum}; FALSE)`;
             } else {
@@ -344,7 +356,6 @@
                 const searchValue = match[1];
                 const indexNum = parseInt(match[2]);
 
-                // Sync helper inputs
                 if(document.activeElement !== vlookupSearchInput) vlookupSearchInput.value = searchValue;
                 if(document.activeElement !== vlookupIndexInput) vlookupIndexInput.value = indexNum;
 
@@ -374,7 +385,7 @@
         function updateHlookupFormula() {
             const searchValue = hlookupSearchInput.value.trim();
             const indexNum = parseInt(hlookupIndexInput.value);
-            const tableRange = 'B1:E3';
+            const tableRange = 'B1:K4';
             if(searchValue) {
                 hlookupFormulaInput.value = `=HLOOKUP("${searchValue}"; ${tableRange}; ${indexNum}; FALSE)`;
             } else {
@@ -405,7 +416,7 @@
                     document.getElementById('hlookup-result-output').textContent = resultText;
 
                     document.getElementById(`hlookup-worksheet-r0c${foundColIndex+2}`).classList.add('highlight');
-                    document.getElementById(`hlookup-worksheet-r${indexNum-1}c${foundColIndex+2}`).classList.add('highlight');
+                    document.getElementById(`hlookup-worksheet-r${indexNum}c${foundColIndex+2}`).classList.add('highlight');
                 } else {
                     document.getElementById('hlookup-result-output').textContent = '#N/A';
                 }
@@ -422,8 +433,8 @@
         function updateXlookupFormula() {
             const searchValue = xlookupSearchInput.value.trim();
             const indexNum = parseInt(xlookupIndexSelect.value);
-            const searchCol = 'A2:A5';
-            const resultCol = `${String.fromCharCode(64 + indexNum)}2:${String.fromCharCode(64 + indexNum)}5`;
+            const searchCol = 'A2:A11';
+            const resultCol = `${String.fromCharCode(65 + indexNum)}2:${String.fromCharCode(65 + indexNum)}11`;
             if(searchValue) {
                 xlookupFormulaInput.value = `=XLOOKUP("${searchValue}"; ${searchCol}; ${resultCol})`;
             } else {
@@ -442,7 +453,7 @@
                 const searchValue = match[1];
                 const resultColRange = match[3];
                 const resultColLetter = resultColRange.charAt(0);
-                const indexNum = resultColLetter.charCodeAt(0) - 64;
+                const indexNum = resultColLetter.charCodeAt(0) - 65;
 
                 if(document.activeElement !== xlookupSearchInput) xlookupSearchInput.value = searchValue;
                 if(document.activeElement !== xlookupIndexSelect) xlookupIndexSelect.value = indexNum;
@@ -450,13 +461,13 @@
                 const searchData = dataVertical.rows.slice(1);
                 const foundRowIndex = searchData.findIndex(row => row[1].toLowerCase() === searchValue.toLowerCase());
 
-                if (foundRowIndex !== -1 && indexNum > 1 && indexNum <= searchData[0].length) {
-                    const result = searchData[foundRowIndex][indexNum];
+                if (foundRowIndex !== -1 && indexNum > 0 && indexNum < searchData[0].length) {
+                    const result = searchData[foundRowIndex][indexNum + 1];
                     const resultText = (typeof result === 'number') ? 'Rp ' + result.toLocaleString('id-ID') : result;
                     document.getElementById('xlookup-result-output').textContent = resultText;
                     
                     document.getElementById(`xlookup-worksheet-r${foundRowIndex+1}c1`).classList.add('highlight');
-                    document.getElementById(`xlookup-worksheet-r${foundRowIndex+1}c${indexNum}`).classList.add('highlight');
+                    document.getElementById(`xlookup-worksheet-r${foundRowIndex+1}c${indexNum+1}`).classList.add('highlight');
                 } else {
                     document.getElementById('xlookup-result-output').textContent = '#N/A';
                 }
