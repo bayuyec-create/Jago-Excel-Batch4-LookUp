@@ -415,8 +415,8 @@
                     const resultText = (typeof result === 'number') ? 'Rp ' + result.toLocaleString('id-ID') : result;
                     document.getElementById('hlookup-result-output').textContent = resultText;
 
-                    document.getElementById(`hlookup-worksheet-r0c${foundColIndex+2}`).classList.add('highlight');
-                    document.getElementById(`hlookup-worksheet-r${indexNum}c${foundColIndex+2}`).classList.add('highlight');
+                    document.getElementById(`hlookup-worksheet-r0c${foundColIndex+1}`).classList.add('highlight');
+                    document.getElementById(`hlookup-worksheet-r${indexNum-1}c${foundColIndex+1}`).classList.add('highlight');
                 } else {
                     document.getElementById('hlookup-result-output').textContent = '#N/A';
                 }
@@ -434,7 +434,7 @@
             const searchValue = xlookupSearchInput.value.trim();
             const indexNum = parseInt(xlookupIndexSelect.value);
             const searchCol = 'A2:A11';
-            const resultCol = `${String.fromCharCode(65 + indexNum)}2:${String.fromCharCode(65 + indexNum)}11`;
+            const resultCol = `${String.fromCharCode(64 + indexNum)}2:${String.fromCharCode(64 + indexNum)}11`;
             if(searchValue) {
                 xlookupFormulaInput.value = `=XLOOKUP("${searchValue}"; ${searchCol}; ${resultCol})`;
             } else {
@@ -453,7 +453,7 @@
                 const searchValue = match[1];
                 const resultColRange = match[3];
                 const resultColLetter = resultColRange.charAt(0);
-                const indexNum = resultColLetter.charCodeAt(0) - 65;
+                const indexNum = resultColLetter.charCodeAt(0) - 64;
 
                 if(document.activeElement !== xlookupSearchInput) xlookupSearchInput.value = searchValue;
                 if(document.activeElement !== xlookupIndexSelect) xlookupIndexSelect.value = indexNum;
@@ -461,13 +461,13 @@
                 const searchData = dataVertical.rows.slice(1);
                 const foundRowIndex = searchData.findIndex(row => row[1].toLowerCase() === searchValue.toLowerCase());
 
-                if (foundRowIndex !== -1 && indexNum > 0 && indexNum < searchData[0].length) {
-                    const result = searchData[foundRowIndex][indexNum + 1];
+                if (foundRowIndex !== -1 && indexNum > 1 && indexNum <= searchData[0].length) {
+                    const result = searchData[foundRowIndex][indexNum];
                     const resultText = (typeof result === 'number') ? 'Rp ' + result.toLocaleString('id-ID') : result;
                     document.getElementById('xlookup-result-output').textContent = resultText;
                     
                     document.getElementById(`xlookup-worksheet-r${foundRowIndex+1}c1`).classList.add('highlight');
-                    document.getElementById(`xlookup-worksheet-r${foundRowIndex+1}c${indexNum+1}`).classList.add('highlight');
+                    document.getElementById(`xlookup-worksheet-r${foundRowIndex+1}c${indexNum}`).classList.add('highlight');
                 } else {
                     document.getElementById('xlookup-result-output').textContent = '#N/A';
                 }
