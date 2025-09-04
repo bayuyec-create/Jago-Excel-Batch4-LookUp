@@ -44,7 +44,7 @@
             align-items: center;
             border-right: 1px solid #d1d5db;
             border-bottom: 1px solid #d1d5db;
-            transition: background-color 0.3s ease-in-out;
+            transition: background-color: 0.3s ease-in-out;
         }
         .excel-header {
             background-color: #f3f4f6;
@@ -85,6 +85,18 @@
             border-left: 4px solid #58508d;
             padding: 1rem;
             margin-bottom: 1.5rem;
+        }
+        .tab-button {
+            padding: 0.75rem 1.5rem;
+            cursor: pointer;
+            font-weight: 600;
+            border-bottom: 4px solid transparent;
+            transition: all 0.3s ease;
+            color: #4b5563;
+        }
+        .tab-button.active-tab {
+            color: #9b5de5;
+            border-bottom-color: #9b5de5;
         }
     </style>
 </head>
@@ -322,6 +334,121 @@
                 </div>
             </div>
 
+            <!-- Combined Multi-Criteria Section -->
+            <div id="combined-multicriteria-playground" class="bg-white rounded-lg shadow-lg p-6 scroll-mt-20">
+                <h2 class="text-2xl font-bold text-center text-purple-600 mb-2">Level Up: Mencari dengan Dua Kriteria!</h2>
+                <p class="text-center text-gray-600 mb-8">Satu kriteria kurang? Tenang, VLOOKUP dan XLOOKUP punya jurus rahasia masing-masing. Pilih jurusmu!</p>
+
+                <!-- Tab Buttons -->
+                <div class="flex justify-center mb-6 border-b-2 border-gray-200">
+                    <button id="show-xlookup-mc" class="tab-button active-tab">
+                        Jurus XLOOKUP (Modern)
+                    </button>
+                    <button id="show-vlookup-mc" class="tab-button">
+                        Jurus VLOOKUP (Klasik)
+                    </button>
+                </div>
+
+                <!-- Content Panels -->
+                <div>
+                    <!-- XLOOKUP Panel -->
+                    <div id="xlookup-mc-content">
+                        <div class="mb-8 border-b pb-6">
+                            <h3 class="font-bold text-lg text-purple-600 mb-3">Jurus XLOOKUP Multi-Kriteria</h3>
+                            <p class="mb-4 text-sm">Masalahnya: Di tabel kita ada dua "Mouse Optik G5", satu kategori "Aksesoris", satu lagi "Gaming". Kita mau cari harga yang "Gaming". Caranya?</p>
+                            <p class="bg-gray-100 p-3 rounded-md text-center text-sm mb-4">
+                                <code class="break-words">=XLOOKUP(<span class="formula-part">1</span>, (<span class="formula-part">range1</span>=<span class="formula-part">kriteria1</span>)*(<span class="formula-part">range2</span>=<span class="formula-part">kriteria2</span>), <span class="formula-part">range_hasil</span>)</code>
+                            </p>
+                            <ul class="text-sm space-y-2">
+                                <li><span class="formula-part">1</span>: Kita mencari hasil dari perkalian logika. Anggap saja kita mencari baris yang hasilnya "BENAR".</li>
+                                <li>(<span class="formula-part">range1</span>=<span class="formula-part">kriteria1</span>): Excel akan cek setiap baris, mana yang cocok dengan kriteria pertama (hasilnya BENAR/SALAH).</li>
+                                <li>* (<span class="formula-part">range2</span>=<span class="formula-part">kriteria2</span>): Dikali dengan pengecekan kriteria kedua. Hanya baris yang <span class="font-bold">keduanya BENAR</span> yang akan dianggap sebagai <span class="font-bold">1</span> (BENAR).</li>
+                                <li><span class="formula-part">range_hasil</span>: Kolom tempat data yang mau kita ambil.</li>
+                            </ul>
+                        </div>
+                        <div class="grid grid-cols-1 lg:grid-cols-5 gap-8">
+                            <div class="lg:col-span-2">
+                                 <div class="bg-gray-50 border-2 border-dashed border-gray-300 rounded-lg p-4 space-y-4">
+                                    <div>
+                                        <label for="mc-xlookup-search-value1" class="font-semibold block mb-1">1. Cari Nama Barang:</label>
+                                        <input type="text" id="mc-xlookup-search-value1" placeholder="Mouse Optik G5" class="interactive-input">
+                                    </div>
+                                    <div>
+                                        <label for="mc-xlookup-search-value2" class="font-semibold block mb-1">2. Dengan Kategori:</label>
+                                        <input type="text" id="mc-xlookup-search-value2" placeholder="Gaming" class="interactive-input">
+                                    </div>
+                                     <div>
+                                        <label for="mc-xlookup-result-range" class="font-semibold block mb-1">3. Ambil Hasil dari Kolom? (Range):</label>
+                                        <input type="text" id="mc-xlookup-result-range" class="interactive-input formula-input">
+                                    </div>
+                                    <div>
+                                        <p class="font-semibold">Rumus (Otomatis):</p>
+                                        <div id="mc-xlookup-formula-output" class="bg-purple-100 p-2 rounded-md font-mono text-purple-800 text-xs break-words min-h-[40px]"></div>
+                                    </div>
+                                    <div>
+                                        <p class="font-semibold">Hasil:</p>
+                                        <div id="mc-xlookup-result-output" class="bg-green-100 border border-green-400 p-2 rounded-md font-bold text-green-800 min-h-[40px]"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="lg:col-span-3 overflow-x-auto">
+                                <p class="font-semibold mb-2 text-center">Tabel Inventaris Barang (dengan data kembar)</p>
+                                <div id="mc-xlookup-worksheet" class="mx-auto"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- VLOOKUP Panel -->
+                    <div id="vlookup-mc-content" class="hidden">
+                        <div class="mb-8 border-b pb-6">
+                            <h3 class="font-bold text-lg text-[#9b5de5] mb-3">Jurus VLOOKUP + Kolom Bantu (Helper Column)</h3>
+                            <p class="mb-4 text-sm">Masalahnya sama: cari harga "Mouse Optik G5" yang kategori "Gaming". Karena VLOOKUP harus cari di kolom paling kiri, kita buat kolom baru yang isinya gabungan dua kriteria!</p>
+                            <ol class="text-sm space-y-2 list-decimal list-inside">
+                                <li><b>Buat Kolom Baru:</b> Di sebelah kiri tabel, kita buat kolom "Kunci Unik".</li>
+                                <li><b>Gabungkan Kriteria:</b> Isi kolom baru itu dengan gabungan "Nama Barang" dan "Kategori". Contoh: "Mouse Optik G5Gaming".</li>
+                                <li><b>VLOOKUP seperti Biasa:</b> Sekarang kita bisa pakai VLOOKUP untuk mencari "kunci unik" tadi di kolom bantu yang baru kita buat. Simpel kan?</li>
+                            </ol>
+                        </div>
+                        <div class="grid grid-cols-1 lg:grid-cols-5 gap-8">
+                            <div class="lg:col-span-2">
+                                 <div class="bg-gray-50 border-2 border-dashed border-gray-300 rounded-lg p-4 space-y-4">
+                                    <div>
+                                        <label for="mc-v-search-value1" class="font-semibold block mb-1">1. Cari Nama Barang:</label>
+                                        <input type="text" id="mc-v-search-value1" placeholder="Mouse Optik G5" class="interactive-input">
+                                    </div>
+                                    <div>
+                                        <label for="mc-v-search-value2" class="font-semibold block mb-1">2. Dengan Kategori:</label>
+                                        <input type="text" id="mc-v-search-value2" placeholder="Gaming" class="interactive-input">
+                                    </div>
+                                    <div>
+                                        <p class="font-semibold block mb-1">Kunci Unik yang Dicari:</p>
+                                        <div id="mc-v-helper-key" class="bg-yellow-100 p-2 rounded-md font-mono text-yellow-800 text-sm break-words"></div>
+                                        <p class="text-xs text-gray-500 mt-1 italic">Dibuat dengan rumus: <code id="mc-v-helper-formula" class="font-mono text-gray-700"></code></p>
+                                    </div>
+                                    <div>
+                                        <label for="mc-v-index-num" class="font-semibold block mb-1">Ambil Hasil dari Kolom ke-?:</label>
+                                        <input type="number" id="mc-v-index-num" value="6" min="1" max="10" class="interactive-input">
+                                    </div>
+                                    <div>
+                                        <p class="font-semibold">Rumus (Otomatis):</p>
+                                        <div id="mc-v-formula-output" class="bg-purple-100 p-2 rounded-md font-mono text-purple-800 text-xs break-words min-h-[40px]"></div>
+                                    </div>
+                                    <div>
+                                        <p class="font-semibold">Hasil:</p>
+                                        <div id="mc-v-result-output" class="bg-green-100 border border-green-400 p-2 rounded-md font-bold text-green-800 min-h-[40px]"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="lg:col-span-3 overflow-x-auto">
+                                <p class="font-semibold mb-2 text-center">Tabel Inventaris dengan Kolom Bantu</p>
+                                <div id="mc-vlookup-worksheet" class="mx-auto"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
             <!-- Kapan Harus Pakai? Section -->
             <div class="bg-white rounded-lg shadow-lg p-6">
                 <h2 class="text-2xl font-bold text-center text-[#003f5c] mb-4">Kapan Harus Pakai yang Mana?</h2>
@@ -360,6 +487,25 @@
                 </div>
             </div>
 
+            <!-- Info Tambahan Section -->
+            <div class="bg-white rounded-lg shadow-lg p-6">
+                <h2 class="text-2xl font-bold text-center text-[#003f5c] mb-4">Eh, Terus Fungsi LOOKUP Biasa ke Mana?</h2>
+                <div class="max-w-3xl mx-auto text-center text-gray-700 space-y-3">
+                    <p>
+                        Kamu mungkin bertanya, "Kenapa gak belajar fungsi <code class="bg-gray-200 px-1 rounded-md font-mono">LOOKUP</code> yang polosan aja?". Pertanyaan bagus!
+                    </p>
+                    <p>
+                        Anggap aja <code class="bg-gray-200 px-1 rounded-md font-mono">LOOKUP</code> itu versi "jadul"-nya. Dia punya satu kelemahan fatal: data di kolom pencariannya <span class="font-bold text-red-600">WAJIB diurutkan</span> dari A-Z atau dari kecil ke besar. Kalau datamu acak-acakan (seperti kebanyakan data di dunia nyata), <code class="bg-gray-200 px-1 rounded-md font-mono">LOOKUP</code> bisa ngasih hasil yang <span class="font-bold">salah total</span> tanpa bilang-bilang! Bahaya, kan?
+                    </p>
+                    <p>
+                        Nah, <code class="bg-gray-200 px-1 rounded-md font-mono">VLOOKUP</code> dan <code class="bg-gray-200 px-1 rounded-md font-mono">HLOOKUP</code> (dengan <code class="bg-gray-200 px-1 rounded-md font-mono">FALSE</code> di akhir) lahir untuk memperbaiki ini. Mereka bisa mencari data yang sama persis di tabel yang acak sekalipun. Makanya, mereka jadi standar di dunia kerja.
+                    </p>
+                     <p class="pt-2 text-gray-500 italic">
+                        Jadi, anggap aja LOOKUP itu motor tua, VLOOKUP & HLOOKUP itu motor matic, dan XLOOKUP itu mobil sport-nya!
+                    </p>
+                </div>
+            </div>
+
         </main>
 
         <footer class="text-center mt-12 py-4 border-t border-gray-300">
@@ -382,18 +528,37 @@
                 ['8', 'P007', 'Hard Disk Eksternal 1TB', 'Penyimpanan', 35, 950000],
                 ['9', 'P008', 'Headset Gaming X', 'Audio', 28, 1250000],
                 ['10', 'P009', 'SSD NVMe 512GB', 'Penyimpanan', 32, 1100000],
-                ['11', 'P010', 'Speaker Bluetooth', 'Audio', 45, 550000]
+                ['11', 'P010', 'Speaker Bluetooth', 'Audio', 45, 550000],
+                ['12', 'P011', 'Mouse Optik G5', 'Gaming', 25, 450000]
+            ]
+        };
+        
+        const dataVerticalWithHelper = {
+            headers: ['', 'A', 'B', 'C', 'D', 'E', 'F'],
+            rows: [
+                ['1', 'Kunci Unik', 'ID Produk', 'Nama Barang', 'Kategori', 'Stok', 'Harga'],
+                ['2', 'Laptop Pro 15Komputer', 'P001', 'Laptop Pro 15', 'Komputer', 15, 18500000],
+                ['3', 'Mouse Optik G5Aksesoris', 'P002', 'Mouse Optik G5', 'Aksesoris', 50, 350000],
+                ['4', 'Keyboard MekanikalAksesoris', 'P003', 'Keyboard Mekanikal', 'Aksesoris', 30, 850000],
+                ['5', 'Monitor LED 24"Monitor', 'P004', 'Monitor LED 24"', 'Monitor', 25, 2500000],
+                ['6', 'Webcam HD 1080pAksesoris', 'P005', 'Webcam HD 1080p', 'Aksesoris', 40, 650000],
+                ['7', 'Printer All-in-OnePrinter', 'P006', 'Printer All-in-One', 'Printer', 20, 1750000],
+                ['8', 'Hard Disk Eksternal 1TBPenyimpanan', 'P007', 'Hard Disk Eksternal 1TB', 'Penyimpanan', 35, 950000],
+                ['9', 'Headset Gaming XAudio', 'P008', 'Headset Gaming X', 'Audio', 28, 1250000],
+                ['10', 'SSD NVMe 512GBPenyimpanan', 'P009', 'SSD NVMe 512GB', 'Penyimpanan', 32, 1100000],
+                ['11', 'Speaker BluetoothAudio', 'P010', 'Speaker Bluetooth', 'Audio', 45, 550000],
+                ['12', 'Mouse Optik G5Gaming', 'P011', 'Mouse Optik G5', 'Gaming', 25, 450000]
             ]
         };
 
         const dataHorizontal = {
-            headers: ['', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K'],
+            headers: ['', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L'],
             rows: [
-                ['1', 'ID Produk', 'P001', 'P002', 'P003', 'P004', 'P005', 'P006', 'P007', 'P008', 'P009', 'P010'],
-                ['2', 'Nama Barang', 'Laptop Pro 15', 'Mouse Optik G5', 'Keyboard Mekanikal', 'Monitor LED 24"', 'Webcam HD 1080p', 'Printer All-in-One', 'Hard Disk Eksternal 1TB', 'Headset Gaming X', 'SSD NVMe 512GB', 'Speaker Bluetooth'],
-                ['3', 'Kategori', 'Komputer', 'Aksesoris', 'Aksesoris', 'Monitor', 'Aksesoris', 'Printer', 'Penyimpanan', 'Audio', 'Penyimpanan', 'Audio'],
-                ['4', 'Stok', 15, 50, 30, 25, 40, 20, 35, 28, 32, 45],
-                ['5', 'Harga', 18500000, 350000, 850000, 2500000, 650000, 1750000, 950000, 1250000, 1100000, 550000]
+                ['1', 'ID Produk', 'P001', 'P002', 'P003', 'P004', 'P005', 'P006', 'P007', 'P008', 'P009', 'P010', 'P011'],
+                ['2', 'Nama Barang', 'Laptop Pro 15', 'Mouse Optik G5', 'Keyboard Mekanikal', 'Monitor LED 24"', 'Webcam HD 1080p', 'Printer All-in-One', 'Hard Disk Eksternal 1TB', 'Headset Gaming X', 'SSD NVMe 512GB', 'Speaker Bluetooth', 'Mouse Optik G5'],
+                ['3', 'Kategori', 'Komputer', 'Aksesoris', 'Aksesoris', 'Monitor', 'Aksesoris', 'Printer', 'Penyimpanan', 'Audio', 'Penyimpanan', 'Audio', 'Gaming'],
+                ['4', 'Stok', 15, 50, 30, 25, 40, 20, 35, 28, 32, 45, 25],
+                ['5', 'Harga', 18500000, 350000, 850000, 2500000, 650000, 1750000, 950000, 1250000, 1100000, 550000, 450000]
             ]
         };
 
@@ -402,8 +567,8 @@
             container.innerHTML = '';
             let html = `<div class="excel-grid" style="grid-template-columns: 40px repeat(${data.headers.length - 1}, minmax(120px, 1fr));">`;
             
-            data.headers.forEach(header => {
-                html += `<div class="excel-cell excel-header" data-col-name="${header}">${header}</div>`;
+            data.headers.forEach((header, headerIndex) => {
+                html += `<div class="excel-cell excel-header" data-col-index="${headerIndex}" data-col-name="${header}">${header}</div>`;
             });
 
             data.rows.forEach((row, rowIndex) => {
@@ -412,7 +577,8 @@
                     const cellId = `${containerId}-r${rowIndex}c${cellIndex}`;
                     let content = cell;
                     if (typeof cell === 'number' && !isHeader) {
-                         if(data.headers[cellIndex] === 'E' || (rowIndex === 4 && containerId.includes('hlookup'))) {
+                         const headerText = data.headers[cellIndex];
+                         if(headerText === 'Harga') {
                            content = 'Rp ' + cell.toLocaleString('id-ID');
                         }
                     }
@@ -430,7 +596,7 @@
              });
         }
         
-        function colLetterToIndex(letter) {
+        function colLetterToCellIndex(letter) {
             return letter.toUpperCase().charCodeAt(0) - 'A'.charCodeAt(0) + 1;
         }
 
@@ -444,9 +610,9 @@
             if (!startMatch || !endMatch) return null;
 
             return {
-                startCol: colLetterToIndex(startMatch[1]), 
+                startCol: colLetterToCellIndex(startMatch[1]), 
                 startRow: parseInt(startMatch[2]), 
-                endCol: colLetterToIndex(endMatch[1]),
+                endCol: colLetterToCellIndex(endMatch[1]),
                 endRow: parseInt(endMatch[2]),
             };
         }
@@ -513,7 +679,7 @@
                         const result = dataVertical.rows[foundRowIndex][resultColIndex];
                         let resultText = result;
                         if (typeof result === 'number') {
-                             if (dataVertical.headers[resultColIndex] === 'Harga') {
+                             if (resultColIndex === 5) { // Harga is column E, cellIndex 5
                                 resultText = 'Rp ' + result.toLocaleString('id-ID');
                             }
                         }
@@ -531,6 +697,74 @@
                  document.getElementById('vlookup-result-output').textContent = '#ERROR!';
             }
         }
+        
+        // --- MULTI-CRITERIA VLOOKUP ---
+        const mcVSearch1 = document.getElementById('mc-v-search-value1');
+        const mcVSearch2 = document.getElementById('mc-v-search-value2');
+        const mcVIndex = document.getElementById('mc-v-index-num');
+        const mcVFormulaOutput = document.getElementById('mc-v-formula-output');
+        const mcVResultOutput = document.getElementById('mc-v-result-output');
+        const mcVHelperKey = document.getElementById('mc-v-helper-key');
+        const mcVHelperFormula = document.getElementById('mc-v-helper-formula');
+
+        function runMultiCriteriaVlookup() {
+            clearHighlights('mc-vlookup-worksheet');
+            const searchValue1 = mcVSearch1.value.trim();
+            const searchValue2 = mcVSearch2.value.trim();
+            const helperKeyValue = searchValue1 + searchValue2;
+            mcVHelperKey.textContent = helperKeyValue;
+            mcVHelperFormula.textContent = `="${searchValue1}"&"${searchValue2}"`;
+            
+            const tableRange = '$A$2:$F$12';
+            const indexNum = parseInt(mcVIndex.value);
+
+            mcVFormulaOutput.textContent = `=VLOOKUP("${helperKeyValue}"; ${tableRange}; ${indexNum}; FALSE)`;
+            
+            const parsedRange = parseRange(tableRange);
+            if (!parsedRange) {
+                mcVResultOutput.textContent = '#ERROR!';
+                return;
+            }
+
+            // Highlighting
+            for (let r = parsedRange.startRow - 1; r <= parsedRange.endRow - 1; r++) {
+                for (let c = parsedRange.startCol; c <= parsedRange.endCol; c++) {
+                    const cell = document.getElementById(`mc-vlookup-worksheet-r${r}c${c}`);
+                    if (cell) cell.classList.add('highlight-range');
+                }
+            }
+            
+            const searchColIndex = 1; // Helper Column A
+            let foundRowIndex = -1;
+
+            for (let r = 1; r < dataVerticalWithHelper.rows.length; r++) {
+                if (String(dataVerticalWithHelper.rows[r][searchColIndex]).toLowerCase() === helperKeyValue.toLowerCase()) {
+                    foundRowIndex = r;
+                    break;
+                }
+            }
+            
+            if (foundRowIndex !== -1) {
+                const resultColIndex = indexNum;
+                if (resultColIndex >= parsedRange.startCol && resultColIndex <= parsedRange.endCol) {
+                    const result = dataVerticalWithHelper.rows[foundRowIndex][resultColIndex];
+                    let resultText = result;
+                    if (typeof result === 'number') {
+                        if (resultColIndex === 6) { // Harga in helper table
+                            resultText = 'Rp ' + result.toLocaleString('id-ID');
+                        }
+                    }
+                    mcVResultOutput.textContent = resultText;
+                    document.getElementById(`mc-vlookup-worksheet-r${foundRowIndex}c${searchColIndex}`).classList.add('highlight');
+                    document.getElementById(`mc-vlookup-worksheet-r${foundRowIndex}c${resultColIndex}`).classList.add('highlight');
+                } else {
+                    mcVResultOutput.textContent = '#REF!';
+                }
+            } else {
+                mcVResultOutput.textContent = '#N/A';
+            }
+        }
+
 
         // --- HLOOKUP LOGIC ---
         const hlookupSearchInput = document.getElementById('hlookup-search-value');
@@ -682,7 +916,7 @@
                      const result = dataVertical.rows[foundRowIndex][resultColIndex];
                      let resultText = result;
                      if (typeof result === 'number') {
-                        if (dataVertical.headers[resultColIndex] === 'Harga') {
+                        if (resultColIndex === 5) { // Harga
                             resultText = 'Rp ' + result.toLocaleString('id-ID');
                         }
                     }
@@ -698,20 +932,99 @@
             }
         }
 
+        // --- MULTI-CRITERIA XLOOKUP ---
+        const mcXlookupSearch1 = document.getElementById('mc-xlookup-search-value1');
+        const mcXlookupSearch2 = document.getElementById('mc-xlookup-search-value2');
+        const mcXlookupResultRange = document.getElementById('mc-xlookup-result-range');
+        const mcXlookupFormulaOutput = document.getElementById('mc-xlookup-formula-output');
+        const mcXlookupResultOutput = document.getElementById('mc-xlookup-result-output');
+
+        function runMultiCriteriaXlookup() {
+            clearHighlights('mc-xlookup-worksheet');
+            const searchValue1 = mcXlookupSearch1.value.trim();
+            const searchValue2 = mcXlookupSearch2.value.trim();
+            const resultRangeStr = mcXlookupResultRange.value.trim();
+            
+            const searchRange1Str = '$B$2:$B$12'; // Nama Barang
+            const searchRange2Str = '$C$2:$C$12'; // Kategori
+
+            mcXlookupFormulaOutput.textContent = `=XLOOKUP(1, (${searchRange1Str}="${searchValue1}")*(${searchRange2Str}="${searchValue2}"), ${resultRangeStr})`;
+            
+            const parsedResultRange = parseRange(resultRangeStr);
+            if (!searchValue1 || !searchValue2 || !parsedResultRange) {
+                mcXlookupResultOutput.textContent = '#N/A';
+                return;
+            }
+
+            const searchCol1Index = 2; // Nama Barang -> Column B in dataVertical.rows
+            const searchCol2Index = 3; // Kategori -> Column C in dataVertical.rows
+            let foundRowIndex = -1;
+            
+            for (let r = 1; r < dataVertical.rows.length; r++) { // Start from 1 to skip header
+                const rowData = dataVertical.rows[r];
+                if(rowData && String(rowData[searchCol1Index]).toLowerCase() === searchValue1.toLowerCase() && String(rowData[searchCol2Index]).toLowerCase() === searchValue2.toLowerCase()){
+                    foundRowIndex = r;
+                    break;
+                }
+            }
+
+            // Highlighting
+            const searchCol1CellIndex = colLetterToCellIndex('B');
+            const searchCol2CellIndex = colLetterToCellIndex('C');
+            for(let r = 1; r < dataVertical.rows.length; r++) {
+                const cell1 = document.getElementById(`mc-xlookup-worksheet-r${r}c${searchCol1CellIndex}`);
+                if(cell1) cell1.classList.add('highlight-range');
+                const cell2 = document.getElementById(`mc-xlookup-worksheet-r${r}c${searchCol2CellIndex}`);
+                if(cell2) cell2.classList.add('highlight-range');
+                const resultCell = document.getElementById(`mc-xlookup-worksheet-r${r}c${parsedResultRange.startCol}`);
+                if(resultCell) resultCell.classList.add('highlight-result-range');
+            }
+            
+
+            if(foundRowIndex !== -1) {
+                const resultColIndex = parsedResultRange.startCol;
+                const result = dataVertical.rows[foundRowIndex][resultColIndex];
+                let resultText = result;
+                if (typeof result === 'number') {
+                    if (resultColIndex === 5) { // Harga is column E, cellIndex 5
+                        resultText = 'Rp ' + result.toLocaleString('id-ID');
+                    }
+                }
+                mcXlookupResultOutput.textContent = resultText;
+                
+                const foundCell1 = document.getElementById(`mc-xlookup-worksheet-r${foundRowIndex}c${searchCol1CellIndex}`);
+                if(foundCell1) foundCell1.classList.add('highlight');
+
+                const foundCell2 = document.getElementById(`mc-xlookup-worksheet-r${foundRowIndex}c${searchCol2CellIndex}`);
+                if(foundCell2) foundCell2.classList.add('highlight');
+                
+                const resultCell = document.getElementById(`mc-xlookup-worksheet-r${foundRowIndex}c${resultColIndex}`);
+                if(resultCell) resultCell.classList.add('highlight');
+
+            } else {
+                mcXlookupResultOutput.textContent = '#N/A';
+            }
+        }
+
+
         // --- INITIALIZATION ---
         document.addEventListener('DOMContentLoaded', () => {
-            
-            const originalVerticalData = JSON.parse(JSON.stringify(dataVertical));
-            const originalHorizontalData = JSON.parse(JSON.stringify(dataHorizontal));
 
-            createWorksheet('vlookup-worksheet', originalVerticalData);
-            createWorksheet('hlookup-worksheet', originalHorizontalData);
-            createWorksheet('xlookup-worksheet', originalVerticalData);
+            createWorksheet('vlookup-worksheet', dataVertical);
+            createWorksheet('mc-vlookup-worksheet', dataVerticalWithHelper);
+            createWorksheet('hlookup-worksheet', dataHorizontal);
+            createWorksheet('xlookup-worksheet', dataVertical);
+            createWorksheet('mc-xlookup-worksheet', dataVertical);
+
 
             vlookupSearchInput.addEventListener('input', updateVlookupFormula);
             vlookupRangeInput.addEventListener('input', updateVlookupFormula);
             vlookupIndexInput.addEventListener('input', updateVlookupFormula);
             vlookupFormulaInput.addEventListener('input', runVlookup);
+
+            mcVSearch1.addEventListener('input', runMultiCriteriaVlookup);
+            mcVSearch2.addEventListener('input', runMultiCriteriaVlookup);
+            mcVIndex.addEventListener('input', runMultiCriteriaVlookup);
             
             hlookupSearchInput.addEventListener('input', updateHlookupFormula);
             hlookupRangeInput.addEventListener('input', updateHlookupFormula);
@@ -723,20 +1036,57 @@
             xlookupResultRangeInput.addEventListener('input', updateXlookupFormula);
             xlookupFormulaInput.addEventListener('input', runXlookup);
 
+            mcXlookupSearch1.addEventListener('input', runMultiCriteriaXlookup);
+            mcXlookupSearch2.addEventListener('input', runMultiCriteriaXlookup);
+            mcXlookupResultRange.addEventListener('input', runMultiCriteriaXlookup);
+
+            // Tab logic
+            const showXlookupBtn = document.getElementById('show-xlookup-mc');
+            const showVlookupBtn = document.getElementById('show-vlookup-mc');
+            const xlookupContent = document.getElementById('xlookup-mc-content');
+            const vlookupContent = document.getElementById('vlookup-mc-content');
+
+            showXlookupBtn.addEventListener('click', () => {
+                xlookupContent.classList.remove('hidden');
+                vlookupContent.classList.add('hidden');
+                showXlookupBtn.classList.add('active-tab');
+                showVlookupBtn.classList.remove('active-tab');
+            });
+
+            showVlookupBtn.addEventListener('click', () => {
+                vlookupContent.classList.remove('hidden');
+                xlookupContent.classList.add('hidden');
+                showVlookupBtn.classList.add('active-tab');
+                showXlookupBtn.classList.remove('active-tab');
+            });
+
+
             // Initial population
             vlookupSearchInput.value = 'P005';
-            vlookupRangeInput.value = '$B$2:$F$11';
-            vlookupIndexInput.value = 4; // To get Stok
+            vlookupRangeInput.value = '$A$2:$E$12';
+            vlookupIndexInput.value = 5; // To get Harga
+            
+            mcVSearch1.value = 'Mouse Optik G5';
+            mcVSearch2.value = 'Gaming';
+            mcVIndex.value = 6;
+
             hlookupSearchInput.value = 'P007';
-            hlookupRangeInput.value = '$B$1:$K$5';
+            hlookupRangeInput.value = '$B$1:$L$5';
             hlookupIndexInput.value = 5; // To get Harga
+            
             xlookupSearchInput.value = 'P010';
-            xlookupSearchRangeInput.value = '$B$2:$B$11';
-            xlookupResultRangeInput.value = '$E$2:$E$11';
+            xlookupSearchRangeInput.value = '$A$2:$A$12';
+            xlookupResultRangeInput.value = '$E$2:$E$12';
+            
+            mcXlookupSearch1.value = 'Mouse Optik G5';
+            mcXlookupSearch2.value = 'Gaming';
+            mcXlookupResultRange.value = '$E$2:$E$12';
             
             updateVlookupFormula();
+            runMultiCriteriaVlookup();
             updateHlookupFormula();
             updateXlookupFormula();
+            runMultiCriteriaXlookup();
         });
     </script>
 
