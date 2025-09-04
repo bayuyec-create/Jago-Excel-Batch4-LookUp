@@ -355,7 +355,9 @@
                     <div id="xlookup-mc-content">
                         <div class="mb-8 border-b pb-6">
                             <h3 class="font-bold text-lg text-purple-600 mb-3">Jurus XLOOKUP Multi-Kriteria</h3>
-                            <p class="mb-4 text-sm">Masalahnya: Di tabel kita ada dua "Mouse Optik G5", satu kategori "Aksesoris", satu lagi "Gaming". Kita mau cari harga yang "Gaming". Caranya?</p>
+                            <p class="mb-4 text-sm">Masalahnya: Di tabel kita ada dua "Mouse Optik G5", satu kategori "Aksesoris", satu lagi "Gaming". Kita mau cari harga yang "Gaming". Ada dua cara populer, lho!</p>
+                            
+                            <h4 class="font-semibold text-md text-gray-700 mt-4 mb-2">Cara 1: Jurus Logika Perkalian (Powerfull!)</h4>
                             <p class="bg-gray-100 p-3 rounded-md text-center text-sm mb-4">
                                 <code class="break-words">=XLOOKUP(<span class="formula-part">1</span>, (<span class="formula-part">range1</span>=<span class="formula-part">kriteria1</span>)*(<span class="formula-part">range2</span>=<span class="formula-part">kriteria2</span>), <span class="formula-part">range_hasil</span>)</code>
                             </p>
@@ -364,6 +366,17 @@
                                 <li>(<span class="formula-part">range1</span>=<span class="formula-part">kriteria1</span>): Excel akan cek setiap baris, mana yang cocok dengan kriteria pertama (hasilnya BENAR/SALAH).</li>
                                 <li>* (<span class="formula-part">range2</span>=<span class="formula-part">kriteria2</span>): Dikali dengan pengecekan kriteria kedua. Hanya baris yang <span class="font-bold">keduanya BENAR</span> yang akan dianggap sebagai <span class="font-bold">1</span> (BENAR).</li>
                                 <li><span class="formula-part">range_hasil</span>: Kolom tempat data yang mau kita ambil.</li>
+                            </ul>
+
+                            <h4 class="font-semibold text-md text-gray-700 mt-6 mb-2">Cara 2: Jurus Penggabungan Teks (Simpel & Keren!)</h4>
+                            <p class="mb-2 text-sm">Kamu juga bisa menggabungkan kedua kriteria jadi satu teks unik, lalu mencarinya di gabungan kolom pencarian. Ini seringkali lebih mudah dibaca!</p>
+                            <p class="bg-gray-100 p-3 rounded-md text-center text-sm mb-4">
+                                <code class="break-words">=XLOOKUP(<span class="formula-part">kriteria1</span>&<span class="formula-part">kriteria2</span>, <span class="formula-part">range1</span>&<span class="formula-part">range2</span>, <span class="formula-part">range_hasil</span>)</code>
+                            </p>
+                             <ul class="text-sm space-y-2">
+                                <li><span class="formula-part">kriteria1</span>&<span class="formula-part">kriteria2</span>: Gabungkan dua nilai yang kamu cari. Contoh: "Mouse Optik G5"&"Gaming" akan menjadi "Mouse Optik G5Gaming".</li>
+                                <li><span class="formula-part">range1</span>&<span class="formula-part">range2</span>: Gabungkan dua kolom pencarian. Excel akan membuat kolom virtual berisi gabungan data dari kedua kolom tersebut.</li>
+                                <li><span class="formula-part">range_hasil</span>: Kolom tempat data yang mau kita ambil. Tetap sama!</li>
                             </ul>
                         </div>
                         <div class="grid grid-cols-1 lg:grid-cols-5 gap-8">
@@ -382,8 +395,8 @@
                                         <input type="text" id="mc-xlookup-result-range" class="interactive-input formula-input">
                                     </div>
                                     <div>
-                                        <p class="font-semibold">Rumus (Otomatis):</p>
-                                        <div id="mc-xlookup-formula-output" class="bg-purple-100 p-2 rounded-md font-mono text-purple-800 text-xs break-words min-h-[40px]"></div>
+                                        <p class="font-semibold">Rumus (Bisa Diedit):</p>
+                                        <input type="text" id="mc-xlookup-formula-input" class="interactive-input formula-input w-full p-2 rounded-md text-sm break-words">
                                     </div>
                                     <div>
                                         <p class="font-semibold">Hasil:</p>
@@ -430,8 +443,8 @@
                                         <input type="number" id="mc-v-index-num" value="6" min="1" max="10" class="interactive-input">
                                     </div>
                                     <div>
-                                        <p class="font-semibold">Rumus (Otomatis):</p>
-                                        <div id="mc-v-formula-output" class="bg-purple-100 p-2 rounded-md font-mono text-purple-800 text-xs break-words min-h-[40px]"></div>
+                                        <p class="font-semibold">Rumus (Bisa Diedit):</p>
+                                        <input type="text" id="mc-v-formula-input" class="interactive-input formula-input w-full p-2 rounded-md text-sm break-words">
                                     </div>
                                     <div>
                                         <p class="font-semibold">Hasil:</p>
@@ -702,13 +715,12 @@
         const mcVSearch1 = document.getElementById('mc-v-search-value1');
         const mcVSearch2 = document.getElementById('mc-v-search-value2');
         const mcVIndex = document.getElementById('mc-v-index-num');
-        const mcVFormulaOutput = document.getElementById('mc-v-formula-output');
+        const mcVFormulaInput = document.getElementById('mc-v-formula-input');
         const mcVResultOutput = document.getElementById('mc-v-result-output');
         const mcVHelperKey = document.getElementById('mc-v-helper-key');
         const mcVHelperFormula = document.getElementById('mc-v-helper-formula');
 
-        function runMultiCriteriaVlookup() {
-            clearHighlights('mc-vlookup-worksheet');
+        function updateMultiCriteriaVlookupFormula() {
             const searchValue1 = mcVSearch1.value.trim();
             const searchValue2 = mcVSearch2.value.trim();
             const helperKeyValue = searchValue1 + searchValue2;
@@ -717,51 +729,65 @@
             
             const tableRange = '$A$2:$F$12';
             const indexNum = parseInt(mcVIndex.value);
-
-            mcVFormulaOutput.textContent = `=VLOOKUP("${helperKeyValue}"; ${tableRange}; ${indexNum}; FALSE)`;
+            mcVFormulaInput.value = `=VLOOKUP("${helperKeyValue}"; ${tableRange}; ${indexNum}; FALSE)`;
+            runMultiCriteriaVlookup();
+        }
+        
+        function runMultiCriteriaVlookup() {
+            clearHighlights('mc-vlookup-worksheet');
+            const formula = mcVFormulaInput.value;
+            const regex = /=VLOOKUP\("([^"]+)"\s*;\s*([$A-Z0-9:]+)\s*;\s*(\d+)\s*;\s*FALSE\)/i;
+            const match = formula.match(regex);
             
-            const parsedRange = parseRange(tableRange);
-            if (!parsedRange) {
-                mcVResultOutput.textContent = '#ERROR!';
-                return;
-            }
+            if (match) {
+                const helperKeyValue = match[1];
+                const tableRange = match[2];
+                const indexNum = parseInt(match[3]);
 
-            // Highlighting
-            for (let r = parsedRange.startRow - 1; r <= parsedRange.endRow - 1; r++) {
-                for (let c = parsedRange.startCol; c <= parsedRange.endCol; c++) {
-                    const cell = document.getElementById(`mc-vlookup-worksheet-r${r}c${c}`);
-                    if (cell) cell.classList.add('highlight-range');
+                const parsedRange = parseRange(tableRange);
+                if (!parsedRange) {
+                    mcVResultOutput.textContent = '#ERROR!';
+                    return;
                 }
-            }
-            
-            const searchColIndex = 1; // Helper Column A
-            let foundRowIndex = -1;
 
-            for (let r = 1; r < dataVerticalWithHelper.rows.length; r++) {
-                if (String(dataVerticalWithHelper.rows[r][searchColIndex]).toLowerCase() === helperKeyValue.toLowerCase()) {
-                    foundRowIndex = r;
-                    break;
-                }
-            }
-            
-            if (foundRowIndex !== -1) {
-                const resultColIndex = indexNum;
-                if (resultColIndex >= parsedRange.startCol && resultColIndex <= parsedRange.endCol) {
-                    const result = dataVerticalWithHelper.rows[foundRowIndex][resultColIndex];
-                    let resultText = result;
-                    if (typeof result === 'number') {
-                        if (resultColIndex === 6) { // Harga in helper table
-                            resultText = 'Rp ' + result.toLocaleString('id-ID');
-                        }
+                for (let r = parsedRange.startRow - 1; r <= parsedRange.endRow - 1; r++) {
+                    for (let c = parsedRange.startCol; c <= parsedRange.endCol; c++) {
+                        const cell = document.getElementById(`mc-vlookup-worksheet-r${r}c${c}`);
+                        if (cell) cell.classList.add('highlight-range');
                     }
-                    mcVResultOutput.textContent = resultText;
-                    document.getElementById(`mc-vlookup-worksheet-r${foundRowIndex}c${searchColIndex}`).classList.add('highlight');
-                    document.getElementById(`mc-vlookup-worksheet-r${foundRowIndex}c${resultColIndex}`).classList.add('highlight');
+                }
+                
+                const searchColIndex = 1; // Helper Column A
+                let foundRowIndex = -1;
+
+                for (let r = 1; r < dataVerticalWithHelper.rows.length; r++) {
+                    if (String(dataVerticalWithHelper.rows[r][searchColIndex]).toLowerCase() === helperKeyValue.toLowerCase()) {
+                        foundRowIndex = r;
+                        break;
+                    }
+                }
+                
+                if (foundRowIndex !== -1) {
+                    const resultColIndex = indexNum;
+                    if (resultColIndex >= parsedRange.startCol && resultColIndex <= parsedRange.endCol) {
+                        const result = dataVerticalWithHelper.rows[foundRowIndex][resultColIndex];
+                        let resultText = result;
+                        if (typeof result === 'number') {
+                            if (resultColIndex === 6) { // Harga in helper table
+                                resultText = 'Rp ' + result.toLocaleString('id-ID');
+                            }
+                        }
+                        mcVResultOutput.textContent = resultText;
+                        document.getElementById(`mc-vlookup-worksheet-r${foundRowIndex}c${searchColIndex}`).classList.add('highlight');
+                        document.getElementById(`mc-vlookup-worksheet-r${foundRowIndex}c${resultColIndex}`).classList.add('highlight');
+                    } else {
+                        mcVResultOutput.textContent = '#REF!';
+                    }
                 } else {
-                    mcVResultOutput.textContent = '#REF!';
+                    mcVResultOutput.textContent = '#N/A';
                 }
             } else {
-                mcVResultOutput.textContent = '#N/A';
+                 mcVResultOutput.textContent = '#ERROR!';
             }
         }
 
@@ -936,73 +962,102 @@
         const mcXlookupSearch1 = document.getElementById('mc-xlookup-search-value1');
         const mcXlookupSearch2 = document.getElementById('mc-xlookup-search-value2');
         const mcXlookupResultRange = document.getElementById('mc-xlookup-result-range');
-        const mcXlookupFormulaOutput = document.getElementById('mc-xlookup-formula-output');
+        const mcXlookupFormulaInput = document.getElementById('mc-xlookup-formula-input');
         const mcXlookupResultOutput = document.getElementById('mc-xlookup-result-output');
-
-        function runMultiCriteriaXlookup() {
-            clearHighlights('mc-xlookup-worksheet');
+        
+        function updateMultiCriteriaXlookupFormula() {
             const searchValue1 = mcXlookupSearch1.value.trim();
             const searchValue2 = mcXlookupSearch2.value.trim();
             const resultRangeStr = mcXlookupResultRange.value.trim();
             
             const searchRange1Str = '$B$2:$B$12'; // Nama Barang
             const searchRange2Str = '$C$2:$C$12'; // Kategori
+            mcXlookupFormulaInput.value = `=XLOOKUP(1; (${searchRange1Str}="${searchValue1}")*(${searchRange2Str}="${searchValue2}"); ${resultRangeStr})`;
+            runMultiCriteriaXlookup();
+        }
 
-            mcXlookupFormulaOutput.textContent = `=XLOOKUP(1, (${searchRange1Str}="${searchValue1}")*(${searchRange2Str}="${searchValue2}"), ${resultRangeStr})`;
+        function runMultiCriteriaXlookup() {
+            clearHighlights('mc-xlookup-worksheet');
+            const formula = mcXlookupFormulaInput.value;
             
-            const parsedResultRange = parseRange(resultRangeStr);
-            if (!searchValue1 || !searchValue2 || !parsedResultRange) {
-                mcXlookupResultOutput.textContent = '#N/A';
-                return;
-            }
+            const regexMultiply = /=XLOOKUP\(\s*1\s*;\s*\(([^=]+)="([^"]+)"\)\s*\*\s*\(([^=]+)="([^"]+)"\)\s*;\s*([$A-Z0-9:]+)\)/i;
+            const regexConcat = /=XLOOKUP\("([^"]+)"\s*&\s*"([^"]+)"\s*;\s*([$A-Z0-9:]+)\s*&\s*([$A-Z0-9:]+)\s*;\s*([$A-Z0-9:]+)\)/i;
+            
+            let matchMultiply = formula.match(regexMultiply);
+            let matchConcat = formula.match(regexConcat);
 
-            const searchCol1Index = 2; // Nama Barang -> Column B in dataVertical.rows
-            const searchCol2Index = 3; // Kategori -> Column C in dataVertical.rows
             let foundRowIndex = -1;
-            
-            for (let r = 1; r < dataVertical.rows.length; r++) { // Start from 1 to skip header
-                const rowData = dataVertical.rows[r];
-                if(rowData && String(rowData[searchCol1Index]).toLowerCase() === searchValue1.toLowerCase() && String(rowData[searchCol2Index]).toLowerCase() === searchValue2.toLowerCase()){
-                    foundRowIndex = r;
-                    break;
+            let resultColIndex = -1;
+
+            if (matchMultiply) {
+                const searchValue1 = matchMultiply[2];
+                const searchValue2 = matchMultiply[4];
+                const resultRangeStr = matchMultiply[5].trim();
+                const parsedResultRange = parseRange(resultRangeStr);
+
+                if (!parsedResultRange) { mcXlookupResultOutput.textContent = '#ERROR!'; return; }
+                resultColIndex = parsedResultRange.startCol;
+                
+                const searchCol1Index = 2; // Nama Barang
+                const searchCol2Index = 3; // Kategori
+
+                for (let r = 1; r < dataVertical.rows.length; r++) {
+                    const rowData = dataVertical.rows[r];
+                    if(rowData && String(rowData[searchCol1Index]).toLowerCase() === searchValue1.toLowerCase() && String(rowData[searchCol2Index]).toLowerCase() === searchValue2.toLowerCase()){
+                        foundRowIndex = r;
+                        break;
+                    }
+                }
+            } else if (matchConcat) {
+                const searchValue1 = matchConcat[1];
+                const searchValue2 = matchConcat[2];
+                const searchRange1Str = matchConcat[3].trim();
+                const searchRange2Str = matchConcat[4].trim();
+                const resultRangeStr = matchConcat[5].trim();
+
+                const parsedSearch1 = parseRange(searchRange1Str);
+                const parsedSearch2 = parseRange(searchRange2Str);
+                const parsedResult = parseRange(resultRangeStr);
+
+                if (!parsedSearch1 || !parsedSearch2 || !parsedResult) { mcXlookupResultOutput.textContent = '#ERROR!'; return; }
+                
+                resultColIndex = parsedResult.startCol;
+                const searchCol1Index = parsedSearch1.startCol;
+                const searchCol2Index = parsedSearch2.startCol;
+
+                for (let r = 1; r < dataVertical.rows.length; r++) {
+                    const rowData = dataVertical.rows[r];
+                    if(rowData && String(rowData[searchCol1Index]).toLowerCase() === searchValue1.toLowerCase() && String(rowData[searchCol2Index]).toLowerCase() === searchValue2.toLowerCase()){
+                        foundRowIndex = r;
+                        break;
+                    }
                 }
             }
 
-            // Highlighting
-            const searchCol1CellIndex = colLetterToCellIndex('B');
-            const searchCol2CellIndex = colLetterToCellIndex('C');
-            for(let r = 1; r < dataVertical.rows.length; r++) {
-                const cell1 = document.getElementById(`mc-xlookup-worksheet-r${r}c${searchCol1CellIndex}`);
-                if(cell1) cell1.classList.add('highlight-range');
-                const cell2 = document.getElementById(`mc-xlookup-worksheet-r${r}c${searchCol2CellIndex}`);
-                if(cell2) cell2.classList.add('highlight-range');
-                const resultCell = document.getElementById(`mc-xlookup-worksheet-r${r}c${parsedResultRange.startCol}`);
-                if(resultCell) resultCell.classList.add('highlight-result-range');
-            }
-            
-
             if(foundRowIndex !== -1) {
-                const resultColIndex = parsedResultRange.startCol;
+                // Highlighting and result display
+                const searchCol1CellIndex = 2; // B
+                const searchCol2CellIndex = 3; // C
+                for(let r = 1; r < dataVertical.rows.length; r++) {
+                    document.getElementById(`mc-xlookup-worksheet-r${r}c${searchCol1CellIndex}`).classList.add('highlight-range');
+                    document.getElementById(`mc-xlookup-worksheet-r${r}c${searchCol2CellIndex}`).classList.add('highlight-range');
+                    document.getElementById(`mc-xlookup-worksheet-r${r}c${resultColIndex}`).classList.add('highlight-result-range');
+                }
+                
                 const result = dataVertical.rows[foundRowIndex][resultColIndex];
                 let resultText = result;
-                if (typeof result === 'number') {
-                    if (resultColIndex === 5) { // Harga is column E, cellIndex 5
-                        resultText = 'Rp ' + result.toLocaleString('id-ID');
-                    }
+                if (typeof result === 'number' && resultColIndex === 5) { // Harga
+                    resultText = 'Rp ' + result.toLocaleString('id-ID');
                 }
                 mcXlookupResultOutput.textContent = resultText;
                 
-                const foundCell1 = document.getElementById(`mc-xlookup-worksheet-r${foundRowIndex}c${searchCol1CellIndex}`);
-                if(foundCell1) foundCell1.classList.add('highlight');
-
-                const foundCell2 = document.getElementById(`mc-xlookup-worksheet-r${foundRowIndex}c${searchCol2CellIndex}`);
-                if(foundCell2) foundCell2.classList.add('highlight');
-                
-                const resultCell = document.getElementById(`mc-xlookup-worksheet-r${foundRowIndex}c${resultColIndex}`);
-                if(resultCell) resultCell.classList.add('highlight');
-
-            } else {
+                document.getElementById(`mc-xlookup-worksheet-r${foundRowIndex}c${searchCol1CellIndex}`).classList.add('highlight');
+                document.getElementById(`mc-xlookup-worksheet-r${foundRowIndex}c${searchCol2CellIndex}`).classList.add('highlight');
+                document.getElementById(`mc-xlookup-worksheet-r${foundRowIndex}c${resultColIndex}`).classList.add('highlight');
+            } else if (matchMultiply || matchConcat) {
                 mcXlookupResultOutput.textContent = '#N/A';
+            } else {
+                 mcXlookupResultOutput.textContent = '#ERROR!';
             }
         }
 
@@ -1022,9 +1077,10 @@
             vlookupIndexInput.addEventListener('input', updateVlookupFormula);
             vlookupFormulaInput.addEventListener('input', runVlookup);
 
-            mcVSearch1.addEventListener('input', runMultiCriteriaVlookup);
-            mcVSearch2.addEventListener('input', runMultiCriteriaVlookup);
-            mcVIndex.addEventListener('input', runMultiCriteriaVlookup);
+            mcVSearch1.addEventListener('input', updateMultiCriteriaVlookupFormula);
+            mcVSearch2.addEventListener('input', updateMultiCriteriaVlookupFormula);
+            mcVIndex.addEventListener('input', updateMultiCriteriaVlookupFormula);
+            mcVFormulaInput.addEventListener('input', runMultiCriteriaVlookup);
             
             hlookupSearchInput.addEventListener('input', updateHlookupFormula);
             hlookupRangeInput.addEventListener('input', updateHlookupFormula);
@@ -1036,9 +1092,11 @@
             xlookupResultRangeInput.addEventListener('input', updateXlookupFormula);
             xlookupFormulaInput.addEventListener('input', runXlookup);
 
-            mcXlookupSearch1.addEventListener('input', runMultiCriteriaXlookup);
-            mcXlookupSearch2.addEventListener('input', runMultiCriteriaXlookup);
-            mcXlookupResultRange.addEventListener('input', runMultiCriteriaXlookup);
+            mcXlookupSearch1.addEventListener('input', updateMultiCriteriaXlookupFormula);
+            mcXlookupSearch2.addEventListener('input', updateMultiCriteriaXlookupFormula);
+            mcXlookupResultRange.addEventListener('input', updateMultiCriteriaXlookupFormula);
+            mcXlookupFormulaInput.addEventListener('input', runMultiCriteriaXlookup);
+
 
             // Tab logic
             const showXlookupBtn = document.getElementById('show-xlookup-mc');
@@ -1083,10 +1141,10 @@
             mcXlookupResultRange.value = '$E$2:$E$12';
             
             updateVlookupFormula();
-            runMultiCriteriaVlookup();
+            updateMultiCriteriaVlookupFormula();
             updateHlookupFormula();
             updateXlookupFormula();
-            runMultiCriteriaXlookup();
+            updateMultiCriteriaXlookupFormula();
         });
     </script>
 
